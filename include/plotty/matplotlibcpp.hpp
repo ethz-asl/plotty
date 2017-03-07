@@ -12,10 +12,12 @@
 //       names of its contributors may be used to endorse or promote products
 //       derived from this software without specific prior written permission.
 //
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND
 // ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL ETH Zurich, Wyss Zurich, Zurich Eye BE LIABLE FOR ANY
+// DISCLAIMED. IN NO EVENT SHALL ETH Zurich, Wyss Zurich, Zurich Eye BE LIABLE
+// FOR ANY
 // DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 // (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 // LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -36,7 +38,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
+// The above copyright notice and this permission notice shall be included in
+// all
 // copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -67,88 +70,65 @@ bool ion();
 bool figure(std::string i = "");
 
 //! Histogram.
-bool hist(
-    const Eigen::Ref<const Eigen::VectorXd>& x,
-    const double bins = 10,
-    const std::string histtype = "bar");
+bool hist(const Eigen::Ref<const Eigen::VectorXd>& x, const double bins = 10,
+          const std::string histtype = "bar");
 
 //! Every row of X is the data for a box.
-bool boxplot(
-    const Eigen::Ref<const Eigen::MatrixXd>& x,
-    const std::vector<std::string>& labels);
-bool boxplot(
-    const Eigen::Ref<const Eigen::MatrixXd>& x,
-    std::initializer_list<const std::string> labels);
-bool boxplot(
-    const Eigen::Ref<const Eigen::MatrixXd>& x);
+bool boxplot(const Eigen::Ref<const Eigen::MatrixXd>& x,
+             const std::vector<std::string>& labels);
+bool boxplot(const Eigen::Ref<const Eigen::MatrixXd>& x,
+             std::initializer_list<const std::string> labels);
+bool boxplot(const Eigen::Ref<const Eigen::MatrixXd>& x);
 
 //! Create a subplot.
 bool subplot(const size_t nrows, const size_t ncols, const size_t plot_number);
 
 //! Create an x/y plot with properties as map.
-bool plot(
-    const Eigen::Ref<const Eigen::MatrixXd>& x,
-    const Eigen::Ref<const Eigen::MatrixXd>& y,
-    const std::map<std::string, std::string>& keywords);
+bool plot(const Eigen::Ref<const Eigen::MatrixXd>& x,
+          const Eigen::Ref<const Eigen::MatrixXd>& y,
+          const std::map<std::string, std::string>& keywords);
 
 //! Create an x/y plot with properties in string.
-bool plot(
-    const Eigen::Ref<const Eigen::MatrixXd>& x,
-    const Eigen::Ref<const Eigen::MatrixXd>& y,
-    const std::string& s = "");
+bool plot(const Eigen::Ref<const Eigen::MatrixXd>& x,
+          const Eigen::Ref<const Eigen::MatrixXd>& y,
+          const std::string& s = "");
 
 //! Create an x/y plot with name as label.
-bool labelPlot(
-    const std::string& name,
-    const Eigen::Ref<const Eigen::MatrixXd>& x,
-    const Eigen::Ref<const Eigen::MatrixXd>& y,
-    const std::string& format = "");
-bool labelPlot(
-    const std::string& name,
-    const Eigen::Ref<const Eigen::MatrixXd>& y,
-    const std::string& format = "");
+bool labelPlot(const std::string& name,
+               const Eigen::Ref<const Eigen::MatrixXd>& x,
+               const Eigen::Ref<const Eigen::MatrixXd>& y,
+               const std::string& format = "");
+bool labelPlot(const std::string& name,
+               const Eigen::Ref<const Eigen::MatrixXd>& y,
+               const std::string& format = "");
 
-bool plot(
-    const Eigen::Ref<const Eigen::MatrixXd>& x,
-    const std::string& format = "");
+bool plot(const Eigen::Ref<const Eigen::MatrixXd>& x,
+          const std::string& format = "");
 
 // -----------------------------------------------------------------------------
 //! @name std::vector wrappers.
 //! @{
-bool plot(
-    const std::vector<double>& y,
-    const std::string& format = "");
+bool plot(const std::vector<double>& y, const std::string& format = "");
 
-bool plot(
-    const std::vector<double>& x,
-    const std::vector<double>& y,
-    const std::map<std::string, std::string>& keywords);
+bool plot(const std::vector<double>& x, const std::vector<double>& y,
+          const std::map<std::string, std::string>& keywords);
 
-bool plot(
-    const std::vector<double>& x,
-    const Eigen::Ref<const Eigen::MatrixXd>& y,
-    const std::map<std::string, std::string>& keywords);
+bool plot(const std::vector<double>& x,
+          const Eigen::Ref<const Eigen::MatrixXd>& y,
+          const std::map<std::string, std::string>& keywords);
 
-bool plot(
-    const std::vector<double>& x,
-    const std::vector<double>& y,
-    const std::string& s = "");
-bool plot(
-    const std::vector<double>& x,
-    const Eigen::Ref<const Eigen::MatrixXd>& y,
-    const std::string& s = "");
+bool plot(const std::vector<double>& x, const std::vector<double>& y,
+          const std::string& s = "");
+bool plot(const std::vector<double>& x,
+          const Eigen::Ref<const Eigen::MatrixXd>& y,
+          const std::string& s = "");
 
-bool labelPlot(
-    const std::string& name,
-    const std::vector<double>& x,
-    const std::vector<double>& y,
-    const std::string& format = "");
+bool labelPlot(const std::string& name, const std::vector<double>& x,
+               const std::vector<double>& y, const std::string& format = "");
 
-bool labelPlot(
-    const std::string& name,
-    const std::vector<double>& x,
-    const Eigen::Ref<const Eigen::MatrixXd>& y,
-    const std::string& format = "");
+bool labelPlot(const std::string& name, const std::vector<double>& x,
+               const Eigen::Ref<const Eigen::MatrixXd>& y,
+               const std::string& format = "");
 //! @}
 
 // -----------------------------------------------------------------------------
@@ -160,13 +140,13 @@ void ylim(double min, double max);
 
 void xlim(double xmin, double xmax);
 
-void title(const std::string &titlestr);
+void title(const std::string& titlestr);
 
-void axis(const std::string &axisstr);
+void axis(const std::string& axisstr);
 
-void xlabel(const std::string &str);
+void xlabel(const std::string& str);
 
-void ylabel(const std::string &str);
+void ylabel(const std::string& str);
 
 void grid(bool flag);
 
@@ -175,4 +155,4 @@ void show(bool block = true);
 void save(const std::string& filename);
 //! @}
 
-} // namespace plt
+}  // namespace plt

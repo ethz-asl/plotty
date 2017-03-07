@@ -12,10 +12,12 @@
 //       names of its contributors may be used to endorse or promote products
 //       derived from this software without specific prior written permission.
 //
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND
 // ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL ETH Zurich, Wyss Zurich, Zurich Eye BE LIABLE FOR ANY
+// DISCLAIMED. IN NO EVENT SHALL ETH Zurich, Wyss Zurich, Zurich Eye BE LIABLE
+// FOR ANY
 // DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 // (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 // LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -36,7 +38,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
+// The above copyright notice and this permission notice shall be included in
+// all
 // copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -58,25 +61,24 @@ namespace plotty {
 namespace detail {
 
 // -----------------------------------------------------------------------------
-struct _interpreter
-{
-  PyObject *s_python_function_show;
-  PyObject *s_python_function_save;
-  PyObject *s_python_function_figure;
-  PyObject *s_python_function_plot;
-  PyObject *s_python_function_subplot;
-  PyObject *s_python_function_hist;
-  PyObject *s_python_function_boxplot;
-  PyObject *s_python_function_legend;
-  PyObject *s_python_function_xlim;
-  PyObject *s_python_function_ylim;
-  PyObject *s_python_function_title;
-  PyObject *s_python_function_axis;
-  PyObject *s_python_function_xlabel;
-  PyObject *s_python_function_ylabel;
-  PyObject *s_python_function_ion;
-  PyObject *s_python_function_grid;
-  PyObject *s_python_empty_tuple;
+struct _interpreter {
+  PyObject* s_python_function_show;
+  PyObject* s_python_function_save;
+  PyObject* s_python_function_figure;
+  PyObject* s_python_function_plot;
+  PyObject* s_python_function_subplot;
+  PyObject* s_python_function_hist;
+  PyObject* s_python_function_boxplot;
+  PyObject* s_python_function_legend;
+  PyObject* s_python_function_xlim;
+  PyObject* s_python_function_ylim;
+  PyObject* s_python_function_title;
+  PyObject* s_python_function_axis;
+  PyObject* s_python_function_xlabel;
+  PyObject* s_python_function_ylabel;
+  PyObject* s_python_function_ion;
+  PyObject* s_python_function_grid;
+  PyObject* s_python_empty_tuple;
 
   /** For now, _interpreter is implemented as a singleton since its currently
    * not possible to have multiple independent embedded python interpreters
@@ -85,23 +87,20 @@ struct _interpreter
    * http://bytes.com/topic/python/answers/793370-multiple-independent-python-interpreters-c-c-program
    */
 
-  static _interpreter& get()
-  {
+  static _interpreter& get() {
     static _interpreter ctx;
     return ctx;
   }
 
-private:
-  _interpreter()
-  {
-    char name[] = "plotting"; // silence compiler warning about const strings
-    Py_SetProgramName(name);  // optional but recommended
+ private:
+  _interpreter() {
+    char name[] = "plotting";  // silence compiler warning about const strings
+    Py_SetProgramName(name);   // optional but recommended
     Py_Initialize();
 
     PyObject* pyplotname = PyString_FromString("matplotlib.pyplot");
-    PyObject* pylabname  = PyString_FromString("pylab");
-    if (!pyplotname || !pylabname)
-    {
+    PyObject* pylabname = PyString_FromString("pylab");
+    if (!pyplotname || !pylabname) {
       throw std::runtime_error("couldnt create string");
     }
 
@@ -113,8 +112,7 @@ private:
 
     PyObject* pylabmod = PyImport_Import(pylabname);
     Py_DECREF(pylabname);
-    if (!pymod)
-    {
+    if (!pymod) {
       throw std::runtime_error("Error loading module pylab!");
     }
 
@@ -136,69 +134,51 @@ private:
 
     s_python_function_save = PyObject_GetAttrString(pylabmod, "savefig");
 
-    if(!s_python_function_show
-       || !s_python_function_save
-       || !s_python_function_figure
-       || !s_python_function_plot
-       || !s_python_function_subplot
-       || !s_python_function_hist
-       || !s_python_function_boxplot
-       || !s_python_function_legend
-       || !s_python_function_xlim
-       || !s_python_function_ylim
-       || !s_python_function_title
-       || !s_python_function_axis
-       || !s_python_function_xlabel
-       || !s_python_function_ylabel
-       || !s_python_function_ion
-       || !s_python_function_grid
-       )
-    {
+    if (!s_python_function_show || !s_python_function_save ||
+        !s_python_function_figure || !s_python_function_plot ||
+        !s_python_function_subplot || !s_python_function_hist ||
+        !s_python_function_boxplot || !s_python_function_legend ||
+        !s_python_function_xlim || !s_python_function_ylim ||
+        !s_python_function_title || !s_python_function_axis ||
+        !s_python_function_xlabel || !s_python_function_ylabel ||
+        !s_python_function_ion || !s_python_function_grid) {
       throw std::runtime_error("Couldnt find required function!");
     }
 
-    if(!PyFunction_Check(s_python_function_show)
-       || !PyFunction_Check(s_python_function_save)
-       || !PyFunction_Check(s_python_function_figure)
-       || !PyFunction_Check(s_python_function_plot)
-       || !PyFunction_Check(s_python_function_subplot)
-       || !PyFunction_Check(s_python_function_hist)
-       || !PyFunction_Check(s_python_function_boxplot)
-       || !PyFunction_Check(s_python_function_legend)
-       || !PyFunction_Check(s_python_function_xlim)
-       || !PyFunction_Check(s_python_function_ylim)
-       || !PyFunction_Check(s_python_function_title)
-       || !PyFunction_Check(s_python_function_axis)
-       || !PyFunction_Check(s_python_function_xlabel)
-       || !PyFunction_Check(s_python_function_ylabel)
-       || !PyFunction_Check(s_python_function_ion)
-       || !PyFunction_Check(s_python_function_grid)
-       )
-    {
-      throw std::runtime_error("Python object is unexpectedly not a PyFunction.");
+    if (!PyFunction_Check(s_python_function_show) ||
+        !PyFunction_Check(s_python_function_save) ||
+        !PyFunction_Check(s_python_function_figure) ||
+        !PyFunction_Check(s_python_function_plot) ||
+        !PyFunction_Check(s_python_function_subplot) ||
+        !PyFunction_Check(s_python_function_hist) ||
+        !PyFunction_Check(s_python_function_boxplot) ||
+        !PyFunction_Check(s_python_function_legend) ||
+        !PyFunction_Check(s_python_function_xlim) ||
+        !PyFunction_Check(s_python_function_ylim) ||
+        !PyFunction_Check(s_python_function_title) ||
+        !PyFunction_Check(s_python_function_axis) ||
+        !PyFunction_Check(s_python_function_xlabel) ||
+        !PyFunction_Check(s_python_function_ylabel) ||
+        !PyFunction_Check(s_python_function_ion) ||
+        !PyFunction_Check(s_python_function_grid)) {
+      throw std::runtime_error(
+          "Python object is unexpectedly not a PyFunction.");
     }
 
     s_python_empty_tuple = PyTuple_New(0);
   }
 
-  ~_interpreter()
-  {
-    Py_Finalize();
-  }
+  ~_interpreter() { Py_Finalize(); }
 };
-} // namespace detail
+}  // namespace detail
 
 // -----------------------------------------------------------------------------
-bool ion()
-{
-
+bool ion() {
   PyObject* args = PyTuple_New(0);
   PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_ion,
-                    args);
+      detail::_interpreter::get().s_python_function_ion, args);
 
-  if (res)
-  {
+  if (res) {
     Py_DECREF(res);
   }
 
@@ -207,26 +187,20 @@ bool ion()
 
 // -----------------------------------------------------------------------------
 //! Create a new figure
-bool figure(std::string i)
-{
+bool figure(std::string i) {
   PyObject* args;
-  if (i != "")
-  {
+  if (i != "") {
     args = PyTuple_New(1);
     PyObject* i_py = PyString_FromString(i.c_str());
     PyTuple_SetItem(args, 0, i_py);
-  }
-  else
-  {
+  } else {
     args = PyTuple_New(0);
   }
 
   PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_figure,
-                    args);
+      detail::_interpreter::get().s_python_function_figure, args);
 
-  if (res)
-  {
+  if (res) {
     Py_DECREF(res);
   }
 
@@ -234,16 +208,12 @@ bool figure(std::string i)
 }
 
 // -----------------------------------------------------------------------------
-bool hist(
-    const Eigen::Ref<const Eigen::VectorXd>& x,
-    const double bins,
-    const std::string histtype)
-{
+bool hist(const Eigen::Ref<const Eigen::VectorXd>& x, const double bins,
+          const std::string histtype) {
   // using python lists
   PyObject* xlist = PyList_New(x.size());
 
-  for (int i = 0; i < x.size(); ++i)
-  {
+  for (int i = 0; i < x.size(); ++i) {
     PyList_SetItem(xlist, i, PyFloat_FromDouble(x(i)));
   }
 
@@ -262,14 +232,12 @@ bool hist(
   PyTuple_SetItem(args, 7, histtype_py);
 
   PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_hist,
-                    args);
+      detail::_interpreter::get().s_python_function_hist, args);
 
   Py_DECREF(xlist);
   Py_DECREF(bins_py);
   Py_DECREF(histtype_py);
-  if (res)
-  {
+  if (res) {
     Py_DECREF(res);
   }
 
@@ -277,24 +245,20 @@ bool hist(
 }
 
 // -----------------------------------------------------------------------------
-bool boxplot(
-    const Eigen::Ref<const Eigen::MatrixXd>& x,
-    const std::vector<std::string>& labels)
-{
+bool boxplot(const Eigen::Ref<const Eigen::MatrixXd>& x,
+             const std::vector<std::string>& labels) {
   CHECK_EQ(x.rows(), static_cast<int>(labels.size()));
 
   // using python lists
   PyObject* data = PyList_New(x.rows());
   PyObject* py_labels = PyList_New(x.rows());
 
-  for (int i = 0; i < x.rows(); ++i)
-  {
+  for (int i = 0; i < x.rows(); ++i) {
     PyObject* row = PyList_New(x.cols());
 
     PyList_SetItem(py_labels, i, PyString_FromString(labels[i].c_str()));
 
-    for (int j = 0; j < x.cols(); ++j)
-    {
+    for (int j = 0; j < x.cols(); ++j) {
       PyList_SetItem(row, j, PyFloat_FromDouble(x(i, j)));
     }
     PyList_SetItem(data, i, row);
@@ -306,18 +270,13 @@ bool boxplot(
 
   // construct keyword args
   PyObject* kwargs = PyDict_New();
-  PyDict_SetItemString(kwargs,
-                       "labels",
-                       py_labels);
+  PyDict_SetItemString(kwargs, "labels", py_labels);
 
   PyObject* res = PyObject_Call(
-                    detail::_interpreter::get().s_python_function_boxplot,
-                    args,
-                    kwargs);
+      detail::_interpreter::get().s_python_function_boxplot, args, kwargs);
 
   Py_DECREF(data);
-  if (res)
-  {
+  if (res) {
     Py_DECREF(res);
   }
 
@@ -325,10 +284,8 @@ bool boxplot(
 }
 
 // -----------------------------------------------------------------------------
-bool boxplot(
-    const Eigen::Ref<const Eigen::MatrixXd>& x,
-    std::initializer_list<const std::string> labels)
-{
+bool boxplot(const Eigen::Ref<const Eigen::MatrixXd>& x,
+             std::initializer_list<const std::string> labels) {
   std::vector<std::string> labels_vector;
   labels_vector.insert(labels_vector.end(), labels.begin(), labels.end());
 
@@ -336,21 +293,16 @@ bool boxplot(
 }
 
 // -----------------------------------------------------------------------------
-bool boxplot(
-    const Eigen::Ref<const Eigen::MatrixXd>& x)
-{
+bool boxplot(const Eigen::Ref<const Eigen::MatrixXd>& x) {
   std::vector<std::string> labels;
-  for (int i = 0; i < x.rows(); ++i)
-  {
+  for (int i = 0; i < x.rows(); ++i) {
     labels.push_back(std::to_string(i));
   }
   return boxplot(x, labels);
 }
 
-
 // -----------------------------------------------------------------------------
-bool subplot(const size_t nrows, const size_t ncols, const size_t plot_number)
-{
+bool subplot(const size_t nrows, const size_t ncols, const size_t plot_number) {
   PyObject* nrows_py = PyFloat_FromDouble(nrows);
   PyObject* ncols_py = PyFloat_FromDouble(ncols);
   PyObject* plot_number_py = PyFloat_FromDouble(plot_number);
@@ -360,14 +312,12 @@ bool subplot(const size_t nrows, const size_t ncols, const size_t plot_number)
   PyTuple_SetItem(subplot_args, 2, plot_number_py);
 
   PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_subplot,
-                    subplot_args);
+      detail::_interpreter::get().s_python_function_subplot, subplot_args);
 
   Py_DECREF(nrows_py);
   Py_DECREF(ncols_py);
   Py_DECREF(plot_number_py);
-  if (res)
-  {
+  if (res) {
     Py_DECREF(res);
   }
 
@@ -375,18 +325,16 @@ bool subplot(const size_t nrows, const size_t ncols, const size_t plot_number)
 }
 
 // -----------------------------------------------------------------------------
-bool plot(
-    const Eigen::Ref<const Eigen::MatrixXd>& x_raw,
-    const Eigen::Ref<const Eigen::MatrixXd>& y_raw,
-    const std::map<std::string, std::string>& keywords)
-{
+bool plot(const Eigen::Ref<const Eigen::MatrixXd>& x_raw,
+          const Eigen::Ref<const Eigen::MatrixXd>& y_raw,
+          const std::map<std::string, std::string>& keywords) {
   CHECK_EQ(true, x_raw.cols() == 1 || x_raw.rows() == 1);
   CHECK_EQ(true, y_raw.cols() == 1 || y_raw.rows() == 1);
 
-  Eigen::Map<const Eigen::VectorXd> x(x_raw.data(),
-                              x_raw.rows() == 1 ? x_raw.cols() : x_raw.rows());
-  Eigen::Map<const Eigen::VectorXd> y(y_raw.data(),
-                              y_raw.rows() == 1 ? y_raw.cols() : y_raw.rows());
+  Eigen::Map<const Eigen::VectorXd> x(
+      x_raw.data(), x_raw.rows() == 1 ? x_raw.cols() : x_raw.rows());
+  Eigen::Map<const Eigen::VectorXd> y(
+      y_raw.data(), y_raw.rows() == 1 ? y_raw.cols() : y_raw.rows());
 
   CHECK_EQ(true, x.size() == y.size());
 
@@ -394,8 +342,7 @@ bool plot(
   PyObject* xlist = PyList_New(x.size());
   PyObject* ylist = PyList_New(y.size());
 
-  for (int i = 0; i < x.size(); ++i)
-  {
+  for (int i = 0; i < x.size(); ++i) {
     PyList_SetItem(xlist, i, PyFloat_FromDouble(x(i)));
     PyList_SetItem(ylist, i, PyFloat_FromDouble(y(i)));
   }
@@ -411,22 +358,17 @@ bool plot(
   // construct keyword args
   PyObject* kwargs = PyDict_New();
   for (std::map<std::string, std::string>::const_iterator it = keywords.begin();
-       it != keywords.end(); ++it)
-  {
-    PyDict_SetItemString(kwargs,
-                         it->first.c_str(),
+       it != keywords.end(); ++it) {
+    PyDict_SetItemString(kwargs, it->first.c_str(),
                          PyString_FromString(it->second.c_str()));
   }
 
   PyObject* res = PyObject_Call(
-                    detail::_interpreter::get().s_python_function_plot,
-                    args,
-                    kwargs);
+      detail::_interpreter::get().s_python_function_plot, args, kwargs);
 
   Py_DECREF(args);
   Py_DECREF(kwargs);
-  if (res)
-  {
+  if (res) {
     Py_DECREF(res);
   }
 
@@ -434,18 +376,16 @@ bool plot(
 }
 
 // -----------------------------------------------------------------------------
-bool plot(
-    const Eigen::Ref<const Eigen::MatrixXd>&  x_raw,
-    const Eigen::Ref<const Eigen::MatrixXd>&  y_raw,
-    const std::string& s)
-{
+bool plot(const Eigen::Ref<const Eigen::MatrixXd>& x_raw,
+          const Eigen::Ref<const Eigen::MatrixXd>& y_raw,
+          const std::string& s) {
   CHECK_EQ(true, x_raw.cols() == 1 || x_raw.rows() == 1);
   CHECK_EQ(true, y_raw.cols() == 1 || y_raw.rows() == 1);
 
-  Eigen::Map<const Eigen::VectorXd> x(x_raw.data(),
-                              x_raw.rows() == 1 ? x_raw.cols() : x_raw.rows());
-  Eigen::Map<const Eigen::VectorXd> y(y_raw.data(),
-                              y_raw.rows() == 1 ? y_raw.cols() : y_raw.rows());
+  Eigen::Map<const Eigen::VectorXd> x(
+      x_raw.data(), x_raw.rows() == 1 ? x_raw.cols() : x_raw.rows());
+  Eigen::Map<const Eigen::VectorXd> y(
+      y_raw.data(), y_raw.rows() == 1 ? y_raw.cols() : y_raw.rows());
 
   CHECK_EQ(true, x.size() == y.size());
 
@@ -453,8 +393,7 @@ bool plot(
   PyObject* ylist = PyList_New(y.size());
   PyObject* pystring = PyString_FromString(s.c_str());
 
-  for (int i = 0; i < x.size(); ++i)
-  {
+  for (int i = 0; i < x.size(); ++i) {
     PyList_SetItem(xlist, i, PyFloat_FromDouble(x(i)));
     PyList_SetItem(ylist, i, PyFloat_FromDouble(y(i)));
   }
@@ -465,14 +404,12 @@ bool plot(
   PyTuple_SetItem(plot_args, 2, pystring);
 
   PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_plot,
-                    plot_args);
+      detail::_interpreter::get().s_python_function_plot, plot_args);
 
   Py_DECREF(xlist);
   Py_DECREF(ylist);
   Py_DECREF(plot_args);
-  if (res)
-  {
+  if (res) {
     Py_DECREF(res);
   }
 
@@ -480,19 +417,17 @@ bool plot(
 }
 
 // -----------------------------------------------------------------------------
-bool labelPlot(
-    const std::string& name,
-    const Eigen::Ref<const Eigen::MatrixXd>& x_raw,
-    const Eigen::Ref<const Eigen::MatrixXd>& y_raw,
-    const std::string& format)
-{
+bool labelPlot(const std::string& name,
+               const Eigen::Ref<const Eigen::MatrixXd>& x_raw,
+               const Eigen::Ref<const Eigen::MatrixXd>& y_raw,
+               const std::string& format) {
   CHECK_EQ(true, x_raw.cols() == 1 || x_raw.rows() == 1);
   CHECK_EQ(true, y_raw.cols() == 1 || y_raw.rows() == 1);
 
-  Eigen::Map<const Eigen::VectorXd> x(x_raw.data(),
-                              x_raw.rows() == 1 ? x_raw.cols() : x_raw.rows());
-  Eigen::Map<const Eigen::VectorXd> y(y_raw.data(),
-                              y_raw.rows() == 1 ? y_raw.cols() : y_raw.rows());
+  Eigen::Map<const Eigen::VectorXd> x(
+      x_raw.data(), x_raw.rows() == 1 ? x_raw.cols() : x_raw.rows());
+  Eigen::Map<const Eigen::VectorXd> y(
+      y_raw.data(), y_raw.rows() == 1 ? y_raw.cols() : y_raw.rows());
 
   CHECK_EQ(true, x.size() == y.size());
 
@@ -503,14 +438,12 @@ bool labelPlot(
   PyObject* ylist = PyList_New(y.size());
   PyObject* pystring = PyString_FromString(format.c_str());
 
-  for (int i = 0; i < x.size(); ++i)
-  {
+  for (int i = 0; i < x.size(); ++i) {
     PyObject* f_xi = PyFloat_FromDouble(x(i));
     PyObject* f_yi = PyFloat_FromDouble(y(i));
-    if (!f_xi || !f_yi)
-    {
-      VLOG(1) << "MPL: value could not be converted to PyFloat:"
-              << x(i) << ", " << y(i);
+    if (!f_xi || !f_yi) {
+      VLOG(1) << "MPL: value could not be converted to PyFloat:" << x(i) << ", "
+              << y(i);
       continue;
     }
     PyList_SetItem(xlist, i, PyFloat_FromDouble(x(i)));
@@ -523,16 +456,13 @@ bool labelPlot(
   PyTuple_SetItem(plot_args, 2, pystring);
 
   PyObject* res = PyObject_Call(
-                    detail::_interpreter::get().s_python_function_plot,
-                    plot_args,
-                    kwargs);
+      detail::_interpreter::get().s_python_function_plot, plot_args, kwargs);
 
   Py_DECREF(kwargs);
   Py_DECREF(xlist);
   Py_DECREF(ylist);
   Py_DECREF(plot_args);
-  if (res)
-  {
+  if (res) {
     Py_DECREF(res);
   }
 
@@ -540,126 +470,96 @@ bool labelPlot(
 }
 
 // -----------------------------------------------------------------------------
-bool labelPlot(
-    const std::string& name,
-    const Eigen::Ref<const Eigen::MatrixXd>& y,
-    const std::string& format)
-{
+bool labelPlot(const std::string& name,
+               const Eigen::Ref<const Eigen::MatrixXd>& y,
+               const std::string& format) {
   Eigen::Matrix<double, Eigen::Dynamic, 1> x(y.size());
-  for (int i=0; i < x.size(); ++i)
-  {
+  for (int i = 0; i < x.size(); ++i) {
     x(i) = i;
   }
   return labelPlot(name, x, y, format);
-
 }
 
 // -----------------------------------------------------------------------------
-bool plot(
-    const Eigen::Ref<const Eigen::MatrixXd>& y,
-    const std::string& format)
-{
+bool plot(const Eigen::Ref<const Eigen::MatrixXd>& y,
+          const std::string& format) {
   Eigen::Matrix<double, Eigen::Dynamic, 1> x(y.size());
-  for (int i=0; i < x.size(); ++i)
-  {
+  for (int i = 0; i < x.size(); ++i) {
     x(i) = i;
   }
-  return plot(x,y,format);
+  return plot(x, y, format);
 }
 
 // -----------------------------------------------------------------------------
-bool plot(
-    const std::vector<double>& y,
-    const std::string& format)
-{
+bool plot(const std::vector<double>& y, const std::string& format) {
   Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, 1>> y_e(y.data(),
-                                                                    y.size());
+                                                                 y.size());
   return plot(y_e, format);
 }
 
 // -----------------------------------------------------------------------------
-bool plot(
-    const std::vector<double>& x,
-    const std::vector<double>& y,
-    const std::map<std::string, std::string>& keywords)
-{
+bool plot(const std::vector<double>& x, const std::vector<double>& y,
+          const std::map<std::string, std::string>& keywords) {
   Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, 1>> x_e(x.data(),
-                                                                    x.size());
+                                                                 x.size());
   Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, 1>> y_e(y.data(),
-                                                                    y.size());
+                                                                 y.size());
   return plot(x_e, y_e, keywords);
 }
 
 // -----------------------------------------------------------------------------
-bool plot(
-    const std::vector<double>& x,
-    const Eigen::Ref<const Eigen::MatrixXd>& y,
-    const std::map<std::string, std::string>& keywords)
-{
+bool plot(const std::vector<double>& x,
+          const Eigen::Ref<const Eigen::MatrixXd>& y,
+          const std::map<std::string, std::string>& keywords) {
   Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, 1>> x_e(x.data(),
-                                                                    x.size());
+                                                                 x.size());
   return plot(x_e, y, keywords);
 }
 
 // -----------------------------------------------------------------------------
-bool plot(
-    const std::vector<double>& x,
-    const std::vector<double>& y,
-    const std::string& s)
-{
+bool plot(const std::vector<double>& x, const std::vector<double>& y,
+          const std::string& s) {
   Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, 1>> x_e(x.data(),
-                                                                    x.size());
+                                                                 x.size());
   Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, 1>> y_e(y.data(),
-                                                                    y.size());
+                                                                 y.size());
   return plot(x_e, y_e, s);
 }
 
 // -----------------------------------------------------------------------------
-bool plot(
-    const std::vector<double>& x,
-    const Eigen::Ref<const Eigen::MatrixXd>& y,
-    const std::string& s)
-{
+bool plot(const std::vector<double>& x,
+          const Eigen::Ref<const Eigen::MatrixXd>& y, const std::string& s) {
   Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, 1>> x_e(x.data(),
-                                                                    x.size());
+                                                                 x.size());
   return plot(x_e, y, s);
 }
 
 // -----------------------------------------------------------------------------
-bool labelPlot(
-    const std::string& name,
-    const std::vector<double>& x,
-    const std::vector<double>& y,
-    const std::string& format)
-{
+bool labelPlot(const std::string& name, const std::vector<double>& x,
+               const std::vector<double>& y, const std::string& format) {
   Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, 1>> x_e(x.data(),
-                                                                    x.size());
+                                                                 x.size());
   Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, 1>> y_e(y.data(),
-                                                                    y.size());
+                                                                 y.size());
   return labelPlot(name, x_e, y_e, format);
 }
 
 // -----------------------------------------------------------------------------
-bool labelPlot(
-    const std::string& name,
-    const std::vector<double>& x,
-    const Eigen::Ref<const Eigen::MatrixXd>& y,
-    const std::string& format)
-{
+bool labelPlot(const std::string& name, const std::vector<double>& x,
+               const Eigen::Ref<const Eigen::MatrixXd>& y,
+               const std::string& format) {
   Eigen::Map<const Eigen::Matrix<double, Eigen::Dynamic, 1>> x_e(x.data(),
-                                                                    x.size());
+                                                                 x.size());
   return labelPlot(name, x_e, y, format);
 }
 
 // -----------------------------------------------------------------------------
-void legend()
-{
-  PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_legend,
-                    detail::_interpreter::get().s_python_empty_tuple);
+void legend() {
+  PyObject* res =
+      PyObject_CallObject(detail::_interpreter::get().s_python_function_legend,
+                          detail::_interpreter::get().s_python_empty_tuple);
 
-  if (!res)
-  {
+  if (!res) {
     throw std::runtime_error("Call to legend() failed.");
   }
 
@@ -667,8 +567,7 @@ void legend()
 }
 
 // -----------------------------------------------------------------------------
-void ylim(double ymin, double ymax)
-{
+void ylim(double ymin, double ymax) {
   PyObject* list = PyList_New(2);
   PyList_SetItem(list, 0, PyFloat_FromDouble(ymin));
   PyList_SetItem(list, 1, PyFloat_FromDouble(ymax));
@@ -677,10 +576,8 @@ void ylim(double ymin, double ymax)
   PyTuple_SetItem(args, 0, list);
 
   PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_ylim,
-                    args);
-  if (!res)
-  {
+      detail::_interpreter::get().s_python_function_ylim, args);
+  if (!res) {
     throw std::runtime_error("Call to ylim() failed.");
   }
 
@@ -690,8 +587,7 @@ void ylim(double ymin, double ymax)
 }
 
 // -----------------------------------------------------------------------------
-void xlim(double xmin, double xmax)
-{
+void xlim(double xmin, double xmax) {
   PyObject* list = PyList_New(2);
   PyList_SetItem(list, 0, PyFloat_FromDouble(xmin));
   PyList_SetItem(list, 1, PyFloat_FromDouble(xmax));
@@ -700,10 +596,8 @@ void xlim(double xmin, double xmax)
   PyTuple_SetItem(args, 0, list);
 
   PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_xlim,
-                    args);
-  if (!res)
-  {
+      detail::_interpreter::get().s_python_function_xlim, args);
+  if (!res) {
     throw std::runtime_error("Call to xlim() failed.");
   }
 
@@ -713,17 +607,14 @@ void xlim(double xmin, double xmax)
 }
 
 // -----------------------------------------------------------------------------
-void title(const std::string &titlestr)
-{
+void title(const std::string& titlestr) {
   PyObject* pytitlestr = PyString_FromString(titlestr.c_str());
   PyObject* args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, pytitlestr);
 
   PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_title,
-                    args);
-  if (!res)
-  {
+      detail::_interpreter::get().s_python_function_title, args);
+  if (!res) {
     throw std::runtime_error("Call to title() failed.");
   }
 
@@ -731,17 +622,14 @@ void title(const std::string &titlestr)
 }
 
 // -----------------------------------------------------------------------------
-void axis(const std::string &axisstr)
-{
+void axis(const std::string& axisstr) {
   PyObject* str = PyString_FromString(axisstr.c_str());
   PyObject* args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, str);
 
   PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_axis,
-                    args);
-  if (!res)
-  {
+      detail::_interpreter::get().s_python_function_axis, args);
+  if (!res) {
     throw std::runtime_error("Call to title() failed.");
   }
 
@@ -749,17 +637,14 @@ void axis(const std::string &axisstr)
 }
 
 // -----------------------------------------------------------------------------
-void xlabel(const std::string &str)
-{
+void xlabel(const std::string& str) {
   PyObject* pystr = PyString_FromString(str.c_str());
   PyObject* args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, pystr);
 
   PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_xlabel,
-                    args);
-  if (!res)
-  {
+      detail::_interpreter::get().s_python_function_xlabel, args);
+  if (!res) {
     throw std::runtime_error("Call to xlabel() failed.");
   }
 
@@ -767,17 +652,14 @@ void xlabel(const std::string &str)
 }
 
 // -----------------------------------------------------------------------------
-void ylabel(const std::string &str)
-{
+void ylabel(const std::string& str) {
   PyObject* pystr = PyString_FromString(str.c_str());
   PyObject* args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, pystr);
 
   PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_ylabel,
-                    args);
-  if (!res)
-  {
+      detail::_interpreter::get().s_python_function_ylabel, args);
+  if (!res) {
     throw std::runtime_error("Call to ylabel() failed.");
   }
 
@@ -785,18 +667,15 @@ void ylabel(const std::string &str)
 }
 
 // -----------------------------------------------------------------------------
-void grid(bool flag)
-{
+void grid(bool flag) {
   PyObject* pyflag = flag ? Py_True : Py_False;
 
   PyObject* args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, pyflag);
 
   PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_grid,
-                    args);
-  if (!res)
-  {
+      detail::_interpreter::get().s_python_function_grid, args);
+  if (!res) {
     throw std::runtime_error("Call to grid() failed.");
   }
 
@@ -804,20 +683,17 @@ void grid(bool flag)
 }
 
 // -----------------------------------------------------------------------------
-void show(bool block)
-{
+void show(bool block) {
   PyObject* pyflag = block ? Py_True : Py_False;
 
   PyObject* kwargs = PyDict_New();
 
   PyDict_SetItemString(kwargs, "block", pyflag);
 
-  PyObject* res = PyObject_Call(
-                    detail::_interpreter::get().s_python_function_show,
-                    detail::_interpreter::get().s_python_empty_tuple,
-                    kwargs);
-  if (!res)
-  {
+  PyObject* res =
+      PyObject_Call(detail::_interpreter::get().s_python_function_show,
+                    detail::_interpreter::get().s_python_empty_tuple, kwargs);
+  if (!res) {
     throw std::runtime_error("Call to show() failed.");
   }
 
@@ -826,18 +702,15 @@ void show(bool block)
 }
 
 // -----------------------------------------------------------------------------
-void save(const std::string& filename)
-{
+void save(const std::string& filename) {
   PyObject* pyfilename = PyString_FromString(filename.c_str());
 
   PyObject* args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, pyfilename);
 
   PyObject* res = PyObject_CallObject(
-                    detail::_interpreter::get().s_python_function_save,
-                    args);
-  if (!res)
-  {
+      detail::_interpreter::get().s_python_function_save, args);
+  if (!res) {
     throw std::runtime_error("Call to save() failed.");
   }
 
@@ -846,4 +719,4 @@ void save(const std::string& filename)
   Py_DECREF(res);
 }
 
-} // namespace plt
+}  // namespace plt
