@@ -16,7 +16,7 @@ plotty::plot(v);
 plotty::show();
 
 // Eigen Types:
-VectorX w(100);
+Eigen::VectorXd w(100);
 w.setRandom();
 plotty::plot(w)
 plotty::show();
@@ -24,9 +24,9 @@ plotty::show();
 
 ## Plot x and y
 ```c++
-VectorX t(100);
+Eigen::VectorXd t(100);
 t.setLinSpaced(100, 0, 20);
-VectorX v(100);
+Eigen::VectorXd v(100);
 v.setRandom();
 plotty::plot(t, v);
 plotty::show();
