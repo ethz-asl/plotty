@@ -96,4 +96,3 @@ plotty::title("Position over time");
 plotty::xlim(t_start, t_end);
 plotty::ylim(0, x_max);
 ```
-# plotty
