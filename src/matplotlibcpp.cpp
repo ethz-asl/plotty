@@ -94,7 +94,6 @@ struct _interpreter {
 
  private:
   _interpreter() {
-    Py_SetProgramName("plotting");   // optional but recommended
     Py_Initialize();
 
     PyObject* pyplotname = PyBytes_FromString("matplotlib.pyplot");
