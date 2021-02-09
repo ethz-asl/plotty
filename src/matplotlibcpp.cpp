@@ -94,8 +94,7 @@ struct _interpreter {
 
  private:
   _interpreter() {
-    wchar_t name[] = L"plotting";  // silence compiler warning about const strings
-    Py_SetProgramName(name);   // optional but recommended
+    Py_SetProgramName("plotting");   // optional but recommended
     Py_Initialize();
 
     PyObject* pyplotname = PyBytes_FromString("matplotlib.pyplot");
