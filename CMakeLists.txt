@@ -8,8 +8,9 @@ add_definitions(-std=c++11 -Wno-sign-compare -Wno-unused-value)
 
 # The matplotlib-cpp headers are linked against
 find_package(PythonLibs)
-message(STATUS "PYTHON: ${PYTHON_INCLUDE_DIRS}")
 include_directories(${PYTHON_INCLUDE_DIRS})
+
+add_definitions(-DPYTHON_VERSION_MAJOR=${PYTHON_VERSION_MAJOR})
 
 #############
 # LIBRARIES #

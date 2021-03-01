@@ -94,7 +94,11 @@ struct _interpreter {
 
  private:
   _interpreter() {
-    const wchar_t name[] = L"plotting";  // silence compiler warning about const strings
+#if PYTHON_VERSION_MAJOR == 2
+    char name[] = "plotting";
+#else
+    const wchar_t name[] = L"plotting";
+#endif
     Py_SetProgramName(name);   // optional but recommended
     Py_Initialize();
 
