@@ -95,15 +95,17 @@ struct _interpreter {
  private:
   _interpreter() {
 #if PYTHON_VERSION_MAJOR == 2
+#define ToPyStr(X) PyString_FromString(X)
     char name[] = "plotting";
 #else
+#define ToPyStr(X) PyUnicode_FromString(X)
     const wchar_t name[] = L"plotting";
 #endif
     Py_SetProgramName(name);   // optional but recommended
     Py_Initialize();
 
-    PyObject* pyplotname = PyBytes_FromString("matplotlib.pyplot");
-    PyObject* pylabname = PyBytes_FromString("pylab");
+    PyObject* pyplotname = ToPyStr("matplotlib.pyplot");
+    PyObject* pylabname = ToPyStr("pylab");
     if (!pyplotname || !pylabname) {
       throw std::runtime_error("couldnt create string");
     }
@@ -195,7 +197,7 @@ bool figure(std::string i) {
   PyObject* args;
   if (i != "") {
     args = PyTuple_New(1);
-    PyObject* i_py = PyBytes_FromString(i.c_str());
+    PyObject* i_py = ToPyStr(i.c_str());
     PyTuple_SetItem(args, 0, i_py);
   } else {
     args = PyTuple_New(0);
@@ -222,7 +224,7 @@ bool hist(const Eigen::Ref<const Eigen::VectorXd>& x, const double bins,
   }
 
   PyObject* bins_py = PyFloat_FromDouble(bins);
-  PyObject* histtype_py = PyBytes_FromString(histtype.c_str());
+  PyObject* histtype_py = ToPyStr(histtype.c_str());
 
   // construct positional args
   PyObject* args = PyTuple_New(8);
@@ -260,7 +262,7 @@ bool boxplot(const Eigen::Ref<const Eigen::MatrixXd>& x,
   for (int i = 0; i < x.rows(); ++i) {
     PyObject* row = PyList_New(x.cols());
 
-    PyList_SetItem(py_labels, i, PyBytes_FromString(labels[i].c_str()));
+    PyList_SetItem(py_labels, i, ToPyStr(labels[i].c_str()));
 
     for (int j = 0; j < x.cols(); ++j) {
       PyList_SetItem(row, j, PyFloat_FromDouble(x(i, j)));
@@ -363,8 +365,8 @@ bool plot(const Eigen::Ref<const Eigen::MatrixXd>& x_raw,
   PyObject* kwargs = PyDict_New();
   for (std::map<std::string, std::string>::const_iterator it = keywords.begin();
        it != keywords.end(); ++it) {
-    PyDict_SetItemString(kwargs, it->first.c_str(),
-                         PyBytes_FromString(it->second.c_str()));
+    PyDict_SetItemString(
+        kwargs, it->first.c_str(), ToPyStr(it->second.c_str()));
   }
 
   PyObject* res = PyObject_Call(
@@ -395,7 +397,7 @@ bool plot(const Eigen::Ref<const Eigen::MatrixXd>& x_raw,
 
   PyObject* xlist = PyList_New(x.size());
   PyObject* ylist = PyList_New(y.size());
-  PyObject* pystring = PyBytes_FromString(s.c_str());
+  PyObject* pystring = ToPyStr(s.c_str());
 
   for (int i = 0; i < x.size(); ++i) {
     PyList_SetItem(xlist, i, PyFloat_FromDouble(x(i)));
@@ -436,11 +438,11 @@ bool labelPlot(const std::string& name,
   CHECK_EQ(true, x.size() == y.size());
 
   PyObject* kwargs = PyDict_New();
-  PyDict_SetItemString(kwargs, "label", PyBytes_FromString(name.c_str()));
+  PyDict_SetItemString(kwargs, "label", ToPyStr(name.c_str()));
 
   PyObject* xlist = PyList_New(x.size());
   PyObject* ylist = PyList_New(y.size());
-  PyObject* pystring = PyBytes_FromString(format.c_str());
+  PyObject* pystring = ToPyStr(format.c_str());
 
   for (int i = 0; i < x.size(); ++i) {
     PyObject* f_xi = PyFloat_FromDouble(x(i));
@@ -612,7 +614,7 @@ void xlim(double xmin, double xmax) {
 
 // -----------------------------------------------------------------------------
 void title(const std::string& titlestr) {
-  PyObject* pytitlestr = PyBytes_FromString(titlestr.c_str());
+  PyObject* pytitlestr = ToPyStr(titlestr.c_str());
   PyObject* args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, pytitlestr);
 
@@ -627,7 +629,7 @@ void title(const std::string& titlestr) {
 
 // -----------------------------------------------------------------------------
 void axis(const std::string& axisstr) {
-  PyObject* str = PyBytes_FromString(axisstr.c_str());
+  PyObject* str = ToPyStr(axisstr.c_str());
   PyObject* args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, str);
 
@@ -642,7 +644,7 @@ void axis(const std::string& axisstr) {
 
 // -----------------------------------------------------------------------------
 void xlabel(const std::string& str) {
-  PyObject* pystr = PyBytes_FromString(str.c_str());
+  PyObject* pystr = ToPyStr(str.c_str());
   PyObject* args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, pystr);
 
@@ -657,7 +659,7 @@ void xlabel(const std::string& str) {
 
 // -----------------------------------------------------------------------------
 void ylabel(const std::string& str) {
-  PyObject* pystr = PyBytes_FromString(str.c_str());
+  PyObject* pystr = ToPyStr(str.c_str());
   PyObject* args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, pystr);
 
@@ -707,7 +709,7 @@ void show(bool block) {
 
 // -----------------------------------------------------------------------------
 void save(const std::string& filename) {
-  PyObject* pyfilename = PyBytes_FromString(filename.c_str());
+  PyObject* pyfilename = ToPyStr(filename.c_str());
 
   PyObject* args = PyTuple_New(1);
   PyTuple_SetItem(args, 0, pyfilename);
