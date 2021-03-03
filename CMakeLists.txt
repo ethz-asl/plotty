@@ -33,6 +33,9 @@ target_link_libraries(${PROJECT_NAME} ${PYTHON_LIBRARY})
 cs_add_executable(mpl_example_node src/mpl_example_node.cpp)
 target_link_libraries(mpl_example_node ${PROJECT_NAME})
 
+cs_add_executable(foo src/foo.cpp)
+target_link_libraries(foo ${PROJECT_NAME})
+
 ##########
 # EXPORT #
 ##########
