@@ -70,8 +70,9 @@ bool ion();
 bool figure(std::string i = "");
 
 //! Histogram.
-bool hist(const Eigen::Ref<const Eigen::VectorXd>& x, const double bins = 10,
-          const std::string histtype = "bar");
+bool hist(
+    const Eigen::Ref<const Eigen::VectorXd>& x, const int bins = 10,
+    const std::string histtype = "bar");
 
 //! Every row of X is the data for a box.
 bool boxplot(const Eigen::Ref<const Eigen::MatrixXd>& x,
