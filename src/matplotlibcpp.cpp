@@ -58,20 +58,6 @@
 namespace plotty {
 namespace {
 
-void initPython() {
-  if (!Py_IsInitialized()) {
-#if PYTHON_VERSION_MAJOR == 2
-#define ToPyStr(X) PyString_FromString(X)
-    char name[] = "plotting";
-#else
-#define ToPyStr(X) PyUnicode_FromString(X)
-    const wchar_t name[] = L"plotting";
-#endif
-    Py_SetProgramName(name);  // optional but recommended
-    Py_Initialize();
-  }
-}
-
 // -----------------------------------------------------------------------------
 struct Interpreter {
   PyObject* s_python_function_show;
@@ -106,7 +92,15 @@ struct Interpreter {
 
  private:
   Interpreter() {
-    CHECK(Py_IsInitialized()) << "Python is not initialized. ";
+#if PYTHON_VERSION_MAJOR == 2
+#define ToPyStr(X) PyString_FromString(X)
+    char name[] = "plotting";
+#else
+#define ToPyStr(X) PyUnicode_FromString(X)
+    const wchar_t name[] = L"plotting";
+#endif
+    Py_SetProgramName(name);  // optional but recommended
+    Py_Initialize();
 
     PyObject* pyplotname = ToPyStr("matplotlib.pyplot");
     PyObject* pylabname = ToPyStr("pylab");
@@ -182,6 +176,11 @@ struct Interpreter {
     Py_Finalize();
   }
 };
+
+void initPython() {
+  Interpreter::get();
+}
+
 }  // namespace
 
 // -----------------------------------------------------------------------------
